@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>E-commerce Cart Application</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+            <br>
+            <nav id="top-navigation" class="well well-sm flex flex-row align-center">
+                <a  @click="isShowingCart=false" href="#"><strong>E-commerce Inc.</strong></a>
+
+                <div class="text-right pull-right cart-info">
+                    <span class="stats">{{cart.items.length}} item in cart, total is ${{cartTotal}} </span>
+                    <button @click="isShowingCart=true" class="btn btn-primary">View Cart</button>
+                </div>
+            </nav>
+
+            <div v-if="!isShowingCart" id="products" class="row list-group">
+                <div v-for="product, index in products" class="item col-xs-4">
+                    <div class="thumbnail">
+                        <img class="group list-group-image" src="http://placehold.it/400x250/000/fff">
+                        <div class="caption">
+                            <h4 class="group inner list-group-item-heading">
+                                {{product.name}}
+                            </h4>
+                            <p class="group inner list-group-item-text">
+                                {{product.description}}
+                            </p>
+                            <br>
+
+                            <div class="row flex flex-row align-center">
+                                <div class="col-xs-4">
+                                    <p class="lead">
+                                        ${{product.price}}
+                                    </p>
+                                </div>
+
+                                <div class="col-xs-8 flex flex-row align-center justify-right">
+                                    <div :class="{few: product.inStock < 10, none: product.inStock == 0}" class="number-in-stock">
+                                        {{product.inStock}} in Stock 
+                                    </div>
+                                    <button @click="addProductToCart(product)" :disabled="product.inStock==0" class="btn btn-success">Add to cart</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div v-else>
+                <h1>Cart</h1>
+                <p>This Cart Will be Displayed Here</p>
+                
+                <table v-if="cart.items.length > 0" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr v-for="item, index in cart.items">
+
+                            <td>{{item.product.name}}</td>
+                            <td>{{item.quantity}} &nbsp;
+
+                                <button :disabled="item.product.inStock==0"  @click="inCreaseCartQuantity(item)" class="btn btn-success">+</button>
+
+                                <button :disabled="item.quantity == 1"  @click="deCreaseCartQuantity(item)" class="btn btn-danger">-</button>
+                            </td>
+
+                            <!-- <td>$ {{item.product.price}}</td> -->
+
+                            <td>$ {{item.product.price}}</td>
+                            
+
+                            <td @click="removeItem(item,index)" class="btn btn-danger">X</td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-right" colspan="2">
+                                <strong>Subtotal</strong>
+                            </td>
+
+                            <td>$ {{cartTotal}}</td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-right" colspan="2">
+                                <strong>Taxes (5%)</strong>
+                            </td>
+
+                            <td>$ {{taxAmount}}</td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-right" colspan="2">
+                                <strong>Grand total</strong>
+                            </td>
+
+                            <td>$ {{grandTotal}}</td>
+                            <td></td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2"></td>
+                            <td><button @click="checkOut" class="btn btn-success">Checkout</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
